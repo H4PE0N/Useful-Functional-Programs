@@ -7,7 +7,7 @@
 #include <math.h>
 #include <limits.h>
 
-#include "test-program.h"
+#include "string-morse-conversion.h"
 
 int main(int arg_length, char* arguments[])
 {
@@ -60,6 +60,11 @@ char* convert_morse_string(char*** table, int lines, char** morse, int length)
   for(int index = 0; index < length; index = index + 1)
   {
     char* current_morse = *(morse + index);
+    if(!strcmp(current_morse, "/"))
+    {
+      *(string + index) = ' ';
+      continue;
+    }
     char character = convert_morse_character(table, lines, current_morse);
     *(string + index) = character;
   }
@@ -73,6 +78,11 @@ char** convert_string_morse(char*** table, int lines, char* string, int length)
   for(int index = 0; index < length; index = index + 1)
   {
     char character = *(string + index);
+    if(character == ' ')
+    {
+      *(morse + index) = "/";
+      continue;
+    }
     char* current_code = convert_character_morse(table, lines, character);
     *(morse + index) = current_code;
   }
@@ -105,15 +115,14 @@ char* convert_character_morse(char*** table, int lines, char character)
 
 char*** generate_morse_table(int lines, int line_size)
 {
-  char** file_lines = extract_file_information("../src/data.csv", lines, line_size);
+  char** file_lines = extract_file_information("Source-Programs-Folder/morse-code-table.csv", lines, line_size);
   char*** morse_table = malloc(sizeof(char**) * lines);
-  char* seperator = ",";
   for(int index = 0; index < lines; index = index + 1)
   {
     char* current_line = *(file_lines + index);
     char** letter_code = malloc(sizeof(char*) * 2);
-    *(letter_code + 0) = strtok(current_line, seperator);
-    *(letter_code + 1) = strtok(NULL, seperator);
+    *(letter_code + 0) = strtok(current_line, ",");
+    *(letter_code + 1) = strtok(NULL, ",");
     *(morse_table + index) = letter_code;
   }
   return morse_table;
