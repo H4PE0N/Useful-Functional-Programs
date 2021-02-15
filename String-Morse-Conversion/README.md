@@ -1,1 +1,1 @@
-Tell about test-program
+This is the String-Morse-Conversion program!
