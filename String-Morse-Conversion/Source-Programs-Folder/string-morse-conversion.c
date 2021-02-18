@@ -1,21 +1,9 @@
 
-// INCLUDES ALL PACKAGES AND LIBRARIES FOR THIS PROGRAM
-// THIS LIBRARY CONTAINS THE BASIC FUNCTIONS LIKE PRINT
-#include <stdio.h>
-// THIS LIBRARY CONTAINS
-#include <stdlib.h>
-//THE LIBRARY CONTAINS FUNCTIONS THAT HELP WITH STRINGS
-#include <string.h>
-// THIS LIBRARY CONTAINS THE SIZE  OF  EVERY  DATA-TYPE
-#include <limits.h>
-// THIS LIBRARY CONTAINS THE FALSE AND THE TRUE OBJECTS
-#include <stdbool.h>
-
 // INCLUDING THE HEADER FILE  FOR  THIS  EXACT  PROGRAM
 #include "string-morse-conversion.h"
 
 // THIS IS THE MAIN FUNCTION THAT IS GOING  TO  BE  RAN
-int main(int arg_length, char* arguments[])
+int main(int arg_amount, char* arguments[])
 {
   // CREATING SOME VARIABLES FOR DEALING WITH THE TABLE
   char* file_name = "Source-Programs-Folder/\
@@ -25,19 +13,18 @@ morse-code-table.csv";
   char*** morse_table = generate_morse_table(file_name,
     file_lines, line_size);
   // CHECKS IF THE ACTION IS "morse", IF IT CAN BE DONE
-  if(arg_length >= 3 && !strcmp(arguments[1], "morse"))
+  if(arg_amount >= 3 && !strcmp(arguments[1], "morse"))
   {
     // THIS IS THE VARIABLES NEEDED FOR THIS  OPERATION
     char*string=arguments[2];int length=strlen(string);
     // THIS IS THE CONVERTED MORSE CODE FROM THE STRING
-    printf("STRING: %s LENGTH: %d\n", string, length);
     char** morse_code=convert_string_morse(morse_table,
       file_lines, string, length);
     // THIS FUNCTION OUTPUTS THE CODES FROM  THE  ARRAY
     int output=output_morse_string(morse_code, length);
   }
   //CHECKS IF THE ACTION IS "string", IF IT CAN BE DONE
-  if(arg_length >= 3 && !strcmp(arguments[1],"string"))
+  if(arg_amount >= 3 && !strcmp(arguments[1],"string"))
   {
     // THIS IS THE ARRAY  OF  MORSE  CODES  TO  CONVERT
     char**morse_code=extract_morse_string(arguments[2],
@@ -73,6 +60,7 @@ char** extract_morse_string(char* string, int length)
   int morse_amount = 0; // CREATING  COUNTER   VARIABLE
   while(current_code != NULL)//UNTIL CODE DOESN'T EXIST
   {
+    // ADDING THE CURRENT MORSE CODE TO THE CODE  ARRAY
     *(morse_code + morse_amount) = current_code;
     // INCREASES THE AMOUNT OF MORSE CODES  EVERY  LOOP
     morse_amount = (morse_amount + 1);
@@ -92,7 +80,7 @@ int output_morse_string(char** morse_string,int length)
 
 // THIS FUNCTION  CONERTS  MORSE  CODE  INTO  A  STRING
 char* convert_morse_string(char*** table, int lines,
-  char** morse, int length)
+  char** morse_code, int length)
 {
   // CREATING VARIABLE TO STORE THE CONVERTED STRING IN
   char* string = malloc(sizeof(char) * length);
@@ -100,7 +88,7 @@ char* convert_morse_string(char*** table, int lines,
   for(int index = 0; index < length; index = index + 1)
   {
     // THIS IS THE CURRENT MORSE CODE IN THE CODE ARRAY
-    char* current_morse = *(morse + index);
+    char* current_morse = *(morse_code + index);
     // THIS IS THE MATCHING LETTER FOR THE CURRENT CODE
     char character=convert_morse_character(table,lines,
       current_morse);
@@ -132,7 +120,7 @@ char** convert_string_morse(char*** table, int lines,
 
 // THIS FUNCTION CONVERTS MORSE CODE INTO  A  CHARACTER
 char convert_morse_character(char*** table, int lines,
-  char* morse)
+  char* morse_code)
 {
   char character = '\0'; // CREATING CHARACTER VARIABLE
   // ITERATING THROUGH ALL THE MORSE CODES IN THE TABLE
@@ -143,7 +131,7 @@ char convert_morse_character(char*** table, int lines,
     // THIS  IS  THE  CURRENT  LETTER  FROM  THE  TABLE
     char* current_letter = *(*(table + index) + 0);
     // CHECKING IF THE CURRENT MORSE MATCHES THE  INPUT
-    if(strcmp(current_morse, morse)) continue;
+    if(strcmp(current_morse, morse_code)) continue;
     // IF IT MATCHES, THE CARACTER IS THE CURRENT  CHAR
     character = *(current_letter + 0); break;
   }
